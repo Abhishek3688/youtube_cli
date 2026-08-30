@@ -35,8 +35,8 @@ def main():
         "-n", 
         "--max-results", 
         type=int,
-        default=10,  
-        help="Number of search results (default: 10)"
+        default=50,  
+        help="Number of search results (default: 50)"
     )
     
     parser.add_argument(
@@ -62,65 +62,83 @@ def main():
     
     args = parser.parse_args()
     
-    # Handle missing query 
-    if not args.query: 
-        args.query = input("Enter search query, channel handle (@channel), or URL: ").strip()
-        if not args.query:
-            print("Error: No query provided")
-            sys.exit(1)
+    try:
+        current_query = args.query
 
-    # Direct Single Video URL Check
-    if is_single_video_url(args.query):
-        print(f"Direct video URL provided. Playing: {args.query}")
-        if args.thumb:
-            try:
-                process_youtube_thumbnail(args.query)
-            except Exception as e:
-                print(f"(Thumbnail unavailable: {e})")
-        play_video(args.query, audio_only=args.audio, quality=args.quality, on_top=True)
-        return
+        while True:
+            # Handle missing query 
+            if not current_query: 
+                current_query = input("\nEnter search query, channel (@handle), or URL (or 'q' to quit): ").strip()
+                if not current_query or current_query.lower() in ['q', 'quit', 'exit']:
+                    print("Exiting ytcli. Bye!")
+                    sys.exit(0)
 
-    # Search YouTube (or Channel videos)
-    print(f"Searching YouTube for '{args.query}'...")
-    results = search_youtube(args.query, max_results=args.max_results)
+            # Direct Single Video URL Check
+            if is_single_video_url(current_query):
+                print(f"Direct video URL provided. Playing: {current_query}")
+                if args.thumb:
+                    try:
+                        process_youtube_thumbnail(current_query)
+                    except Exception as e:
+                        print(f"(Thumbnail unavailable: {e})")
+                play_video(current_query, audio_only=args.audio, quality=args.quality, on_top=True)
+                return
 
-    if not results:
-        print("No videos found.")
-        return 
-    
-    # User selects video from results list
-    if len(results) == 1:
-        selected = results[0]
-    else:
-        print(f"\n--- Results for '{args.query}' ---")
-        for i, video in enumerate(results, 1):
-            print(f" [{i}] [{video['duration_str']}] {video['title']} ({video['channel']})")
+            # Search YouTube (or Channel videos)
+            print(f"Searching YouTube for '{current_query}'...")
+            results = search_youtube(current_query, max_results=args.max_results)
 
-        try:
-            choice = input(f"\nSelect video number [1-{len(results)}] (default 1): ").strip()
-            idx = int(choice) - 1 if choice else 0
-            if idx < 0 or idx >= len(results):
-                idx = 0
-        except ValueError:
-            idx = 0
+            if not results:
+                print("No videos found.")
+                current_query = None
+                continue
             
-        selected = results[idx]
+            # Display results list
+            print(f"\n--- Results for '{current_query}' ---")
+            for i, video in enumerate(results, 1):
+                print(f" [{i:2d}] [{video['duration_str']:>7}] {video['title']} ({video['channel']})")
 
-    print(f"\nSelected: {selected['title']}")
-    print(f"Channel: {selected['channel']}")
-    print(f"URL: {selected['url']}")
+            while True:
+                choice = input(f"\nSelect video [1-{len(results)}], 's' to search again, 'q' to quit (default 1): ").strip().lower()
 
-    # Render Thumbnail if requested
-    if args.thumb:
-        try:
-            thumb_source = selected.get("thumbnail") or selected["url"]
-            process_youtube_thumbnail(thumb_source)
-        except Exception as e:
-            print(f"(Thumbnail unavailable: {e})")
+                if choice in ['q', 'quit', 'exit']:
+                    print("Exiting ytcli. Bye!")
+                    sys.exit(0)
+                elif choice in ['s', 'search', 'r', 'retry']:
+                    current_query = input("Enter new search query: ").strip()
+                    break  # Breaks inner loop to re-search
+                else:
+                    try:
+                        idx = int(choice) - 1 if choice else 0
+                        if idx < 0 or idx >= len(results):
+                            idx = 0
+                    except ValueError:
+                        print("Invalid input. Type a video number, 's' to search again, or 'q' to quit.")
+                        continue
+                        
+                    selected = results[idx]
 
-    # Play Stream
-    play_video(selected["url"], audio_only=args.audio, quality=args.quality, on_top=True)
+                    print(f"\nSelected: {selected['title']}")
+                    print(f"Channel: {selected['channel']}")
+                    print(f"URL: {selected['url']}")
+
+                    # Render Thumbnail if requested
+                    if args.thumb:
+                        try:
+                            thumb_source = selected.get("thumbnail") or selected["url"]
+                            process_youtube_thumbnail(thumb_source)
+                        except Exception as e:
+                            print(f"(Thumbnail unavailable: {e})")
+
+                    # Play Stream
+                    play_video(selected["url"], audio_only=args.audio, quality=args.quality, on_top=True)
+                    return
+
+    except (KeyboardInterrupt, EOFError):
+        print("\n\nExited ytcli. Goodbye!")
+        sys.exit(0)
 
 if __name__ == "__main__": 
     main()
+
 

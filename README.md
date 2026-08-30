@@ -28,6 +28,7 @@ winget install --id mpv.net -e
 ```
 
 Add `mpv.net` to your user PATH:
+
 ```powershell
 [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";$env:LOCALAPPDATA\Programs\mpv.net", "User")
 ```
@@ -52,13 +53,13 @@ python main.py "python tutorial"
 
 ## Command Cheat Sheet & Usage Examples
 
-| Flag | Full Option | Description | Example |
-| :--- | :--- | :--- | :--- |
-| *(default)* | `query` | Search query, channel (@handle), or YouTube link | `python main.py "python tutorial"` |
-| **`-t`** | `--thumb` | Show high-resolution terminal thumbnail preview | `python main.py "python tutorial" -t` |
-| **`-a`** | `--audio` | Play audio only (no video window) | `python main.py "lex fridman podcast" -a` |
-| **`-q`** | `--quality` | Cap video resolution (e.g. `720`, `1080`) | `python main.py "4k space footage" -q 720` |
-| **`-n`** | `--max-results` | Change number of search results (default: `10`) | `python main.py "music" -n 20` |
+| Flag             | Full Option       | Description                                      | Example                                      |
+| :--------------- | :---------------- | :----------------------------------------------- | :------------------------------------------- |
+| *(default)*    | `query`         | Search query, channel (@handle), or YouTube link | `python main.py "python tutorial"`         |
+| **`-t`** | `--thumb`       | Show high-resolution terminal thumbnail preview  | `python main.py "python tutorial" -t`      |
+| **`-a`** | `--audio`       | Play audio only (no video window)                | `python main.py "lex fridman podcast" -a`  |
+| **`-q`** | `--quality`     | Cap video resolution (e.g.`720`, `1080`)     | `python main.py "4k space footage" -q 720` |
+| **`-n`** | `--max-results` | Change number of search results (default:`10`) | `python main.py "music" -n 20`             |
 
 ### Example Commands
 
@@ -76,7 +77,6 @@ python main.py "huberman lab podcast" -a
 # 4. Watch 720p video from a direct link with thumbnail preview
 python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -q 720 -t
 ```
-
 
 ---
 
