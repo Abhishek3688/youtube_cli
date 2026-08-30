@@ -54,8 +54,7 @@ python main.py "python tutorial"
 
 | Flag | Full Option | Description | Example |
 | :--- | :--- | :--- | :--- |
-| *(default)* | `query` | Search query or direct YouTube link | `python main.py "cyberpunk 2077 trailer"` |
-| **`-1`** | `--first` | Play the #1 search result immediately | `python main.py "lofi beats" -1` |
+| *(default)* | `query` | Search query, channel (@handle), or YouTube link | `python main.py "python tutorial"` |
 | **`-t`** | `--thumb` | Show high-resolution terminal thumbnail preview | `python main.py "python tutorial" -t` |
 | **`-a`** | `--audio` | Play audio only (no video window) | `python main.py "lex fridman podcast" -a` |
 | **`-q`** | `--quality` | Cap video resolution (e.g. `720`, `1080`) | `python main.py "4k space footage" -q 720` |
@@ -64,18 +63,20 @@ python main.py "python tutorial"
 ### 💡 Example Commands
 
 ```powershell
-# 1. Search and pick from top 10 results
+# 1. Search videos and pick from list
 python main.py "machine learning tutorial"
 
-# 2. Auto-play top result with thumbnail preview while coding
-python main.py "lofi hip hop radio" -1 -t
+# 2. Search YouTube Channel by handle (@channel)
+python main.py "@Fireship"
+python main.py "@freecodecamp"
 
 # 3. Stream podcast in audio-only mode
 python main.py "huberman lab podcast" -a
 
-# 4. Watch 720p video from a direct link
-python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -q 720
+# 4. Watch 720p video from a direct link with thumbnail preview
+python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -q 720 -t
 ```
+
 
 ---
 

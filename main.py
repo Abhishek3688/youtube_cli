@@ -5,10 +5,10 @@ from search import search_youtube
 from thumbnail import process_youtube_thumbnail
 from player import play_video
 
-def is_url(text: str) -> bool: 
-    return text.startswith("https://www.") or text.startswith("http://") \
-            or text.startswith("youtube.com") \
-            or text.startswith("youtu.be")
+def is_single_video_url(text: str) -> bool: 
+    if "/@" in text or "/c/" in text or "/channel/" in text or "/user/" in text:
+        return False
+    return ("watch?v=" in text or "youtu.be/" in text or "shorts/" in text)
 
 def main(): 
     parser = argparse.ArgumentParser(
@@ -19,7 +19,7 @@ def main():
 
     parser.add_argument(
         "query", 
-        help="Search query or YouTube URL to play",
+        help="Search query, channel name/handle (@channel), or YouTube URL to play",
         type=str, 
         nargs="?"
     )
@@ -48,13 +48,6 @@ def main():
     )
 
     parser.add_argument(
-        "-1", 
-        "--first", 
-        action="store_true", 
-        help="Automatically play the first search result"
-    )
-    
-    parser.add_argument(
         "-t",
         "--thumb",
         action="store_true",
@@ -71,14 +64,14 @@ def main():
     
     # Handle missing query 
     if not args.query: 
-        args.query = input("Enter search query or URL: ").strip()
+        args.query = input("Enter search query, channel handle (@channel), or URL: ").strip()
         if not args.query:
             print("Error: No query provided")
             sys.exit(1)
 
-    # Direct URL Check
-    if is_url(args.query):
-        print(f"Direct URL provided. Playing: {args.query}")
+    # Direct Single Video URL Check
+    if is_single_video_url(args.query):
+        print(f"Direct video URL provided. Playing: {args.query}")
         if args.thumb:
             try:
                 process_youtube_thumbnail(args.query)
@@ -87,7 +80,7 @@ def main():
         play_video(args.query, audio_only=args.audio, quality=args.quality, on_top=True)
         return
 
-    # Search YouTube
+    # Search YouTube (or Channel videos)
     print(f"Searching YouTube for '{args.query}'...")
     results = search_youtube(args.query, max_results=args.max_results)
 
@@ -95,11 +88,11 @@ def main():
         print("No videos found.")
         return 
     
-    # Select Video
-    if args.first or len(results) == 1:
+    # User selects video from results list
+    if len(results) == 1:
         selected = results[0]
     else:
-        print(f"\n--- Search Results for '{args.query}' ---")
+        print(f"\n--- Results for '{args.query}' ---")
         for i, video in enumerate(results, 1):
             print(f" [{i}] [{video['duration_str']}] {video['title']} ({video['channel']})")
 
@@ -129,4 +122,5 @@ def main():
     play_video(selected["url"], audio_only=args.audio, quality=args.quality, on_top=True)
 
 if __name__ == "__main__": 
-    main()
+    main()
+

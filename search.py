@@ -15,33 +15,51 @@ def search_youtube(query: str, max_results: int = 10) -> list[dict]:
         "extract_flat": "in_playlist",
         "skip_download": True,
         "quiet": True,
+        "playlistend": max_results,
     }
 
-    search_query = f"ytsearch{max_results}:{query}"
+    if query.startswith("http://") or query.startswith("https://"):
+        if "/@" in query or "/c/" in query or "/channel/" in query or "/user/" in query:
+            search_query = query if query.endswith("/videos") else f"{query.rstrip('/')}/videos"
+        else:
+            search_query = query
+    elif query.startswith("@"):
+        search_query = f"https://www.youtube.com/{query}/videos"
+    else:
+        search_query = f"ytsearch{max_results}:{query}"
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(search_query, download=False)
 
     videos = []
-    if info and "entries" in info:
-        for entry in info["entries"]:
-            if not entry:
-                continue
-            v_id = entry.get("id")
-            if not v_id:
-                continue
-            raw_dur = entry.get("duration")
-            videos.append({
-                "id": v_id,
-                "title": entry.get("title", "Untitled"),
-                "url": f"https://www.youtube.com/watch?v={v_id}",
-                "thumbnail": entry.get("thumbnail") or f"https://img.youtube.com/vi/{v_id}/hqdefault.jpg",
-                "channel": entry.get("uploader") or entry.get("channel") or "Unknown Channel",
-                "duration_str": format_duration(raw_dur),
-                "duration": raw_dur,
-            })
+    if info:
+        entries = info.get("entries")
+        if entries is None and info.get("id"):
+            # Single video fallback
+            entries = [info]
+            
+        if entries:
+            for entry in entries:
+                if not entry:
+                    continue
+                v_id = entry.get("id")
+                if not v_id:
+                    continue
+                raw_dur = entry.get("duration")
+                videos.append({
+                    "id": v_id,
+                    "title": entry.get("title", "Untitled"),
+                    "url": f"https://www.youtube.com/watch?v={v_id}",
+                    "thumbnail": entry.get("thumbnail") or f"https://img.youtube.com/vi/{v_id}/hqdefault.jpg",
+                    "channel": entry.get("uploader") or entry.get("channel") or entry.get("uploader_id") or "Unknown Channel",
+                    "duration_str": format_duration(raw_dur),
+                    "duration": raw_dur,
+                })
+                if len(videos) >= max_results:
+                    break
 
     return videos
+
 
 
 if __name__ == "__main__":
