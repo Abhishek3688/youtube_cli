@@ -53,18 +53,25 @@ python main.py "python tutorial"
 
 ## Command Cheat Sheet & Usage Examples
 
-| Flag             | Full Option       | Description                                      | Example                                      |
-| :--------------- | :---------------- | :----------------------------------------------- | :------------------------------------------- |
-| *(default)*    | `query`         | Search query, channel (@handle), or YouTube link | `python main.py "python tutorial"`         |
-| **`-t`** | `--thumb`       | Show high-resolution terminal thumbnail preview  | `python main.py "python tutorial" -t`      |
-| **`-a`** | `--audio`       | Play audio only (no video window)                | `python main.py "lex fridman podcast" -a`  |
-| **`-q`** | `--quality`     | Cap video resolution (e.g.`720`, `1080`)     | `python main.py "4k space footage" -q 720` |
-| **`-n`** | `--max-results` | Change number of search results (default:`10`) | `python main.py "music" -n 20`             |
+| Flag | Full Option | Description | Example |
+| :--- | :--- | :--- | :--- |
+| *(default)* | `query` | Search query, channel (@handle), or YouTube link | `python main.py "python tutorial"` |
+| **`-t`** | `--thumb` | Show high-resolution terminal thumbnail preview | `python main.py "python tutorial" -t` |
+| **`-a`** | `--audio` | Play audio only (no video window) | `python main.py "lex fridman podcast" -a` |
+| **`-q`** | `--quality` | Cap video resolution (e.g. `720`, `1080`) | `python main.py "4k space footage" -q 720` |
+| **`-n`** | `--max-results` | Change number of search results (default: `50`) | `python main.py "music" -n 20` |
+
+### 🎮 Interactive Selection Controls
+
+When search results are displayed:
+- **`1 - 50`** $\rightarrow$ Enter video number to play in floating Picture-in-Picture window.
+- **`s`** $\rightarrow$ Re-search immediately with a new search query.
+- **`q`** $\rightarrow$ Quit cleanly.
 
 ### Example Commands
 
 ```powershell
-# 1. Search videos and pick from list
+# 1. Search videos and pick from list of 50
 python main.py "machine learning tutorial"
 
 # 2. Search YouTube Channel by handle (@channel)
@@ -94,7 +101,7 @@ To run `ytcli` from **any directory** in PowerShell, add this function to your P
    ```
 3. Restart PowerShell. Now you can run:
    ```powershell
-   ytcli "python beginner guide" -1 -t
+   ytcli "python beginner guide" -t
    ```
 
 ---
@@ -102,3 +109,4 @@ To run `ytcli` from **any directory** in PowerShell, add this function to your P
 ## License
 
 MIT License. Built for seamless terminal productivity!
+
