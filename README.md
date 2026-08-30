@@ -40,7 +40,7 @@ pip install yt-dlp climage pillow requests
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 Run a search query directly from your terminal:
 
@@ -50,7 +50,7 @@ python main.py "python tutorial"
 
 ---
 
-## 📋 Command Cheat Sheet & Usage Examples
+## Command Cheat Sheet & Usage Examples
 
 | Flag | Full Option | Description | Example |
 | :--- | :--- | :--- | :--- |
@@ -60,7 +60,7 @@ python main.py "python tutorial"
 | **`-q`** | `--quality` | Cap video resolution (e.g. `720`, `1080`) | `python main.py "4k space footage" -q 720` |
 | **`-n`** | `--max-results` | Change number of search results (default: `10`) | `python main.py "music" -n 20` |
 
-### 💡 Example Commands
+### Example Commands
 
 ```powershell
 # 1. Search videos and pick from list
@@ -80,7 +80,7 @@ python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -q 720 -t
 
 ---
 
-## 💻 Optional: Add PowerShell Shortcut
+## Optional: Add PowerShell Shortcut
 
 To run `ytcli` from **any directory** in PowerShell, add this function to your PowerShell profile:
 
@@ -99,6 +99,6 @@ To run `ytcli` from **any directory** in PowerShell, add this function to your P
 
 ---
 
-## 📄 License
+## License
 
 MIT License. Built for seamless terminal productivity!
