@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+yt_thumb.png
+.venv/
+env/
+venv/
