@@ -51,7 +51,7 @@ def play_video(
     if quality:
         cmd.append(f"--ytdl-format=bestvideo[height<={quality}]+bestaudio/best")
 
-    print(f"▶ Launching player: {url}")
+    print(f"Launching player: {url}")
     subprocess.run(cmd)
 
 if __name__ == "__main__":
