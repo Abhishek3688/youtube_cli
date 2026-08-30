@@ -1,4 +1,4 @@
-# 🎥 `ytcli` - Lightweight Terminal YouTube Browser & Player for Windows
+# `ytcli` - Lightweight Terminal YouTube Browser & Player for Windows
 
 > **A fast, native Windows alternative to `ytfzf` built with Python, `yt-dlp`, and `mpv.net`.**
 
@@ -6,18 +6,18 @@
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔍 **Fast YouTube Search:** Search YouTube instantly without needing API keys (`yt-dlp` backend).
-- 📌 **Always-on-Top Floating Player:** Opens a compact mini-window over your editor so you can code without distraction.
-- 🖼️ **Terminal Thumbnail Previews:** Converts and previews video thumbnails right inside your terminal console (`climage`).
-- 🎧 **Audio-Only Mode:** Stream music, podcasts, or ambient audio without a video window (`-a`).
-- ⚡ **Resolution Control:** Cap video resolution to 360p, 480p, 720p, 1080p, etc. (`-q`).
-- 🛡️ **IP Rate-Limit Safe:** Uses lightweight flat search extractions to keep your IP 100% safe.
+- **Fast YouTube Search:** Search YouTube instantly without needing API keys (`yt-dlp` backend).
+- **Always-on-Top Floating Player:** Opens a compact mini-window over your editor so you can code without distraction.
+- **Terminal Thumbnail Previews:** Converts and previews video thumbnails right inside your terminal console (`climage`).
+- **Audio-Only Mode:** Stream music, podcasts, or ambient audio without a video window (`-a`).
+- **Resolution Control:** Cap video resolution to 360p, 480p, 720p, 1080p, etc. (`-q`).
+- **IP Rate-Limit Safe:** Uses lightweight flat search extractions to keep your IP 100% safe.
 
 ---
 
-## 🛠️ Prerequisites & Installation
+## Prerequisites & Installation
 
 ### 1. Install `mpv.net` (Media Player for Windows)
 
