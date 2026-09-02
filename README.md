@@ -1,112 +1,191 @@
-# `ytcli` - Lightweight Terminal YouTube Browser & Player for Windows
+# 🎬 `youtube_cli` - Lightweight Terminal YouTube Browser & Player
 
-> **A fast, native Windows alternative to `ytfzf` built with Python, `yt-dlp`, and `mpv.net`.**
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Player: mpv.net](https://img.shields.io/badge/Player-mpv.net%20%2F%20mpv-purple.svg)](https://github.com/mpvnet-player/mpv.net)
+[![Backend: yt-dlp](https://img.shields.io/badge/Backend-yt--dlp-red.svg)](https://github.com/yt-dlp/yt-dlp)
 
-`ytcli` lets you search, preview, and watch YouTube videos directly from your terminal with a floating Picture-in-Picture window — perfect for watching tutorials or lofi streams while coding in VS Code!
+> **A fast, native Windows & cross-platform terminal YouTube client built with Python, `yt-dlp`, and `mpv.net` / `mpv`.**
 
----
-
-## Features
-
-- **Fast YouTube Search:** Search YouTube instantly without needing API keys (`yt-dlp` backend).
-- **Always-on-Top Floating Player:** Opens a compact mini-window over your editor so you can code without distraction.
-- **Terminal Thumbnail Previews:** Converts and previews video thumbnails right inside your terminal console (`climage`).
-- **Audio-Only Mode:** Stream music, podcasts, or ambient audio without a video window (`-a`).
-- **Resolution Control:** Cap video resolution to 360p, 480p, 720p, 1080p, etc. (`-q`).
-- **IP Rate-Limit Safe:** Uses lightweight flat search extractions to keep your IP 100% safe.
+`youtube_cli` lets you search, preview, and stream YouTube videos directly from your terminal without opening a web browser. It features an always-on-top Picture-in-Picture floating mini-player so you can watch tutorials or listen to music while coding uninterrupted.
 
 ---
 
-## Prerequisites & Installation
+## ✨ Features
 
-### 1. Install `mpv.net` (Media Player for Windows)
+- 🔍 **Instant YouTube Search**: Search YouTube without requiring any Google API keys or credentials using `yt-dlp` flat extraction.
+- 🪟 **Floating Picture-in-Picture Player**: Automatically positions an always-on-top mini window (`480x270`) in the corner of your screen over your code editor.
+- 🖼️ **Terminal Thumbnail Previews**: Renders high-resolution video thumbnails directly in your terminal console using Unicode half-block characters (`climage` + Pillow).
+- 📻 **Audio-Only Mode (`-a`)**: Stream podcasts, lo-fi beats, or music playlists with `--no-video` for minimal CPU and bandwidth usage.
+- 📺 **Resolution Control (`-q`)**: Cap stream resolution (`360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`) to conserve network bandwidth.
+- 👤 **Channel & Handle Support**: Search directly by YouTube handle (e.g. `@Fireship`) or channel URL to fetch recent uploads.
+- 🔗 **Direct URL & Shorts Detection**: Paste any standard YouTube URL, `youtu.be` link, or YouTube Shorts link to stream immediately.
+- 🔁 **Interactive Workflow**: Interactive result list with quick selection, instant re-search (`s`), and clean exit (`q`).
+- ⚡ **Zero Video Download Overhead**: Streams audio/video directly through `mpv.net` / `mpv` without saving large video files to disk.
 
-In PowerShell, run:
+---
 
+## 📁 Project Structure
+
+```text
+youtube_cli/
+├── main.py          # CLI entry point, argument parsing, interactive menu loop
+├── search.py        # Fast yt-dlp search engine & channel query resolver
+├── player.py        # Player launcher (detects mpvnet/mpv, configures PiP & quality)
+├── thumbnail.py     # Thumbnail downloader, 16:9 image scaler, and terminal renderer
+├── .gitignore       # Git ignore rules (pycache, temporary thumbnail cache)
+└── README.md        # Documentation and usage guide
+```
+
+---
+
+## 🚀 Prerequisites & Installation
+
+### 1. Install Media Player (`mpv.net` or `mpv`)
+
+`youtube_cli` uses `mpv.net` (recommended on Windows) or standard `mpv`.
+
+#### Windows (via winget):
 ```powershell
 winget install --id mpv.net -e
 ```
 
-Add `mpv.net` to your user PATH:
-
+Ensure `mpv.net` is in your system `PATH`:
 ```powershell
 [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";$env:LOCALAPPDATA\Programs\mpv.net", "User")
 ```
 
-### 2. Install Python Dependencies
+#### Linux / macOS:
+```bash
+# Ubuntu / Debian
+sudo apt install mpv
+
+# macOS (Homebrew)
+brew install mpv
+```
+
+### 2. Clone the Repository & Install Dependencies
 
 ```powershell
+# Clone the repository
+git clone https://github.com/Abhishek3688/youtube_cli.git
+cd youtube_cli
+
+# Install Python packages
 pip install yt-dlp climage pillow requests
 ```
 
 ---
 
-## Quick Start
+## 💻 Usage & Command Reference
 
-Run a search query directly from your terminal:
+### Basic Syntax
 
 ```powershell
-python main.py "python tutorial"
+python main.py [QUERY / URL] [OPTIONS]
 ```
+
+### CLI Flags & Arguments
+
+| Flag | Long Option | Description | Default | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| *(positional)* | `query` | Search keywords, `@channel` handle, or YouTube URL | `None` (prompts) | `python main.py "python tutorial"` |
+| **`-t`** | `--thumb` | Render terminal thumbnail preview before playback | `False` | `python main.py "rust lang" -t` |
+| **`-a`** | `--audio` | Audio-only playback (no video window) | `False` | `python main.py "lofi hip hop" -a` |
+| **`-q`** | `--quality` | Cap maximum resolution (`360`, `480`, `720`, `1080`, `1440`, `2160`) | `None` (Best) | `python main.py "space 4k" -q 1080` |
+| **`-n`** | `--max-results`| Maximum number of search results to fetch | `50` | `python main.py "music" -n 15` |
+| | `--version` | Display version information | | `python main.py --version` |
 
 ---
 
-## Command Cheat Sheet & Usage Examples
+## 🎮 Interactive Controls
 
-| Flag | Full Option | Description | Example |
-| :--- | :--- | :--- | :--- |
-| *(default)* | `query` | Search query, channel (@handle), or YouTube link | `python main.py "python tutorial"` |
-| **`-t`** | `--thumb` | Show high-resolution terminal thumbnail preview | `python main.py "python tutorial" -t` |
-| **`-a`** | `--audio` | Play audio only (no video window) | `python main.py "lex fridman podcast" -a` |
-| **`-q`** | `--quality` | Cap video resolution (e.g. `720`, `1080`) | `python main.py "4k space footage" -q 720` |
-| **`-n`** | `--max-results` | Change number of search results (default: `50`) | `python main.py "music" -n 20` |
+When search results appear in your terminal:
 
-### 🎮 Interactive Selection Controls
+```text
+--- Results for 'python tutorial' ---
+ [ 1] [  12:34] Python Tutorial for Beginners (Programming with Mosh)
+ [ 2] [4:20:15] Python Full Course for Beginners [2024] (freeCodeCamp.org)
+ ...
 
-When search results are displayed:
-- **`1 - 50`** $\rightarrow$ Enter video number to play in floating Picture-in-Picture window.
-- **`s`** $\rightarrow$ Re-search immediately with a new search query.
-- **`q`** $\rightarrow$ Quit cleanly.
+Select video [1-50], 's' to search again, 'q' to quit (default 1):
+```
 
-### Example Commands
+- **`1 - 50`** (or press `Enter` for `1`): Play selected video in the floating PiP window.
+- **`s`** / **`search`** / **`r`**: Prompt for a new search query without restarting the program.
+- **`q`** / **`quit`** / **`exit`**: Cleanly exit `youtube_cli`.
 
+---
+
+## 📖 Examples
+
+### 1. Keyword Search with Interactive Selection
 ```powershell
-# 1. Search videos and pick from list of 50
-python main.py "machine learning tutorial"
+python main.py "fastapi tutorial for beginners"
+```
 
-# 2. Search YouTube Channel by handle (@channel)
+### 2. Channel Search by Handle
+```powershell
 python main.py "@Fireship"
-python main.py "@freecodecamp"
+python main.py "@freecodecamp" -n 10
+```
 
-# 3. Stream podcast in audio-only mode
-python main.py "huberman lab podcast" -a
+### 3. Stream in Audio-Only Mode
+```powershell
+python main.py "lex fridman podcast" -a
+```
 
-# 4. Watch 720p video from a direct link with thumbnail preview
-python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -q 720 -t
+### 4. Cap Video Quality to 720p with Thumbnail Preview
+```powershell
+python main.py "learn neovim in 100 seconds" -q 720 -t
+```
+
+### 5. Play Direct Video URL or YouTube Shorts Directly
+```powershell
+python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -t
+python main.py "https://youtu.be/dQw4w9WgXcQ" -a
+```
+
+### 6. Interactive Mode (No Arguments)
+```powershell
+python main.py
 ```
 
 ---
 
-## Optional: Add PowerShell Shortcut
+## ⚡ Optional: Set Up a Global Terminal Shortcut
 
-To run `ytcli` from **any directory** in PowerShell, add this function to your PowerShell profile:
+To run `youtube_cli` from any directory in PowerShell:
 
-1. Open profile:
+1. Open your PowerShell profile:
    ```powershell
    notepad $PROFILE
    ```
-2. Add this line:
+2. Add a function pointing to your `main.py` path:
    ```powershell
-   function ytcli { python "D:\practice\CLI\main.py" $args }
+   function youtube_cli { python "$HOME\youtube_cli\main.py" $args }
    ```
-3. Restart PowerShell. Now you can run:
+3. Save and reload your profile:
    ```powershell
-   ytcli "python beginner guide" -t
+   . $PROFILE
+   ```
+4. Now you can use `youtube_cli` anywhere:
+   ```powershell
+   youtube_cli "system design interview" -t -q 720
    ```
 
 ---
 
-## License
+## 🛠️ Built With
 
-MIT License. Built for seamless terminal productivity!
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) - Fast metadata extraction and media streaming
+- [mpv.net](https://github.com/mpvnet-player/mpv.net) / [mpv](https://mpv.io/) - High-performance, scriptable media player
+- [climage](https://github.com/pnoy2008/climage) - Image-to-ANSI/Unicode terminal conversion
+- [Pillow (PIL)](https://python-pillow.org/) - Aspect ratio normalization & image processing
+- [Requests](https://requests.readthedocs.io/) - HTTP library for thumbnail asset fetching
 
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).

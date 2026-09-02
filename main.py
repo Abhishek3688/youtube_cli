@@ -12,7 +12,7 @@ def is_single_video_url(text: str) -> bool:
 
 def main(): 
     parser = argparse.ArgumentParser(
-        prog="ytcli", 
+        prog="youtube_cli", 
         description="Search & play YouTube videos directly from your terminal.",
         epilog="Powered by yt-dlp & mpv.net"
     )
@@ -70,7 +70,7 @@ def main():
             if not current_query: 
                 current_query = input("\nEnter search query, channel (@handle), or URL (or 'q' to quit): ").strip()
                 if not current_query or current_query.lower() in ['q', 'quit', 'exit']:
-                    print("Exiting ytcli. Bye!")
+                    print("Exiting youtube_cli. Bye!")
                     sys.exit(0)
 
             # Direct Single Video URL Check
@@ -102,7 +102,7 @@ def main():
                 choice = input(f"\nSelect video [1-{len(results)}], 's' to search again, 'q' to quit (default 1): ").strip().lower()
 
                 if choice in ['q', 'quit', 'exit']:
-                    print("Exiting ytcli. Bye!")
+                    print("Exiting youtube_cli. Bye!")
                     sys.exit(0)
                 elif choice in ['s', 'search', 'r', 'retry']:
                     current_query = input("Enter new search query: ").strip()
@@ -135,7 +135,7 @@ def main():
                     return
 
     except (KeyboardInterrupt, EOFError):
-        print("\n\nExited ytcli. Goodbye!")
+        print("\n\nExited youtube_cli. Goodbye!")
         sys.exit(0)
 
 if __name__ == "__main__": 
